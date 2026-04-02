@@ -6,7 +6,7 @@
 #include "GameFramework/Character.h"
 #include "CC_BaseCharacter.generated.h"
 
-UCLASS()
+UCLASS(Abstract)
 class GASCRASHCOURSE_API ACC_BaseCharacter : public ACharacter
 {
 	GENERATED_BODY()
