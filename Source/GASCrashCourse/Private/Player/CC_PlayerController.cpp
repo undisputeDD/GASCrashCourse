@@ -64,5 +64,5 @@ void ACC_PlayerController::Look(const FInputActionValue& Value)
 	const FVector2D LookAxisVector = Value.Get<FVector2D>();
 
 	AddYawInput(LookAxisVector.X);
-	AddYawInput(LookAxisVector.Y);
+	AddPitchInput(LookAxisVector.Y);
 }
