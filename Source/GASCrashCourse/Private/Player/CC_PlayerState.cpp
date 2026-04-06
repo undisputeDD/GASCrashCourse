@@ -13,3 +13,8 @@ ACC_PlayerState::ACC_PlayerState()
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 }
+
+UAbilitySystemComponent* ACC_PlayerState::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}

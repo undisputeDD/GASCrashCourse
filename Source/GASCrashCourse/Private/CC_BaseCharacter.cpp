@@ -10,3 +10,10 @@ ACC_BaseCharacter::ACC_BaseCharacter()
 	// Tick and refresh bone transforms whether rendered or not - for bone updates on a dedicated server
 	GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
 }
+
+UAbilitySystemComponent* ACC_BaseCharacter::GetAbilitySystemComponent() const
+{
+	return nullptr;
+}
+
+
