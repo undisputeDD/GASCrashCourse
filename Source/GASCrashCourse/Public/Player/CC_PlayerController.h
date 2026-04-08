@@ -9,6 +9,7 @@
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
+struct FGameplayTag;
 
 /**
  * 
@@ -43,4 +44,6 @@ private:
 	TObjectPtr<UInputAction> PrimaryAction;
 
 	void PrimaryAbility();
+
+	void ActivateAbility(const FGameplayTag& AbilityTag);
 };

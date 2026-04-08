@@ -5,6 +5,9 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "GameFramework/Character.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
+#include "GameplayTags/CCTags.h"
 
 void ACC_PlayerController::SetupInputComponent()
 {
@@ -70,5 +73,14 @@ void ACC_PlayerController::Look(const FInputActionValue& Value)
 
 void ACC_PlayerController::PrimaryAbility()
 {
-	UE_LOG(LogTemp, Display, TEXT("Ability used!"));
+	ActivateAbility(CCTags::CCAbilities::Primary);
+}
+
+void ACC_PlayerController::ActivateAbility(const FGameplayTag& AbilityTag)
+{
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn());
+
+	if (!IsValid(ASC)) return;
+
+	ASC->TryActivateAbilitiesByTag(AbilityTag.GetSingleTagContainer());
 }
