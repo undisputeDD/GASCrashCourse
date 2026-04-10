@@ -42,8 +42,14 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Crash|Input|Abilities")
 	TObjectPtr<UInputAction> PrimaryAction;
+	UPROPERTY(EditDefaultsOnly, Category = "Crash|Input|Abilities")
+	TObjectPtr<UInputAction> SecondaryAction;
+	UPROPERTY(EditDefaultsOnly, Category = "Crash|Input|Abilities")
+	TObjectPtr<UInputAction> TertiaryAction;
 
 	void PrimaryAbility();
+	void SecondaryAbility();
+	void TertiaryAbility();
 
 	void ActivateAbility(const FGameplayTag& AbilityTag);
 };
