@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "CC_BaseCharacter.h"
+#include "Characters/CC_BaseCharacter.h"
 #include "AbilitySystemComponent.h"
 
 ACC_BaseCharacter::ACC_BaseCharacter()
