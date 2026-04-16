@@ -7,7 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/CC_PlayerState.h"
-#include "AbilitySystemComponent.h"
+#include "AbilitySystem/CC_AbilitySystemComponent.h"
 
 ACC_PlayerCharacter::ACC_PlayerCharacter()
 {

@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Characters/CC_BaseCharacter.h"
-#include "AbilitySystemInterface.h"
 #include "CC_EnemyCharacter.generated.h"
 
 class UAbilitySystemComponent;
