@@ -14,4 +14,13 @@ class GASCRASHCOURSE_API UCC_HitReact : public UCC_GameplayAbility
 {
 	GENERATED_BODY()
 	
+public:
+	UFUNCTION(BlueprintCallable, Category = "Crash|Abilities")
+	void CacheHitDirectionVectors(AActor* Instigator);
+
+public:
+	UPROPERTY(BlueprintReadOnly, Category = "Crash|Abilities")
+	FVector AvatarForward;
+	UPROPERTY(BlueprintReadOnly, Category = "Crash|Abilities")
+	FVector ToInstigator;
 };
