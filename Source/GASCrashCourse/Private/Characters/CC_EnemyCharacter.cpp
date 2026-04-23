@@ -21,6 +21,11 @@ UAbilitySystemComponent* ACC_EnemyCharacter::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
+UAttributeSet* ACC_EnemyCharacter::GetAttributeSet() const
+{
+	return AttributeSet;
+}
+
 void ACC_EnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -32,4 +37,5 @@ void ACC_EnemyCharacter::BeginPlay()
 	if (!HasAuthority()) return;
 
 	GiveStartupAbilities();
+	InitializeAttributes();
 }

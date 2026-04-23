@@ -20,6 +20,7 @@ class GASCRASHCOURSE_API ACC_EnemyCharacter : public ACC_BaseCharacter
 public:
 	ACC_EnemyCharacter();
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	virtual UAttributeSet* GetAttributeSet() const override;
 
 protected:
 	void BeginPlay();

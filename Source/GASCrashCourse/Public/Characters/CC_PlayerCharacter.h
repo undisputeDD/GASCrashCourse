@@ -8,6 +8,7 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class UAttributeSet;
 
 /**
  * 
@@ -21,6 +22,8 @@ public:
 	ACC_PlayerCharacter();
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	virtual UAttributeSet* GetAttributeSet() const override;
 
 	// Works on the server
 	virtual void PossessedBy(AController* NewController) override;
