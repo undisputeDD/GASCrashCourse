@@ -9,6 +9,8 @@
 class ACC_BaseCharacter;
 class UCC_AbilitySystemComponent;
 class UCC_AttributeSet;
+class UAbilitySystemComponent;
+class UAttributeSet;
 
 /**
  * 
@@ -25,6 +27,15 @@ protected:
 
 private:
 	void InitAbilitySystemData();
+	bool IsASCInitialized() const;
+
+	UFUNCTION()
+	void OnASCInitialized(UAbilitySystemComponent* ASC, UAttributeSet* AS);
+
+	void InitializeAttributeDelegate();
+
+	UFUNCTION()
+	void BindToAttributeChanges();
 
 private:
 	TWeakObjectPtr<ACC_BaseCharacter> CrashCharacter;

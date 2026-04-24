@@ -16,7 +16,8 @@ public class GASCrashCourse : ModuleRules
 			"EnhancedInput",
 			"GameplayAbilities",
 			"GameplayTasks",
-			"GameplayTags"
+			"GameplayTags",
+			"UMG"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
