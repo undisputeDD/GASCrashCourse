@@ -76,9 +76,13 @@ void UCC_WidgetComponent::BindWidgetToAttributeChanges(UWidget* WidgetObject, co
 	if (!AttributeWidget->MatchesAttributes(Pair)) return; // Only subscribe for matching Attributes
 
 	AttributeWidget->OnAttributeChange(Pair, AttributeSet.Get()); // For initial values
+	TWeakObjectPtr<UCC_AttributeWidget> WeakWidget(AttributeWidget);
 
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(Pair.Key).AddLambda([this, AttributeWidget, Pair](const FOnAttributeChangeData& AttributeChangeData)
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(Pair.Key).AddLambda([this, WeakWidget, Pair](const FOnAttributeChangeData& AttributeChangeData)
 	{
-		AttributeWidget->OnAttributeChange(Pair, AttributeSet.Get()); // For changes during the game
+		if (WeakWidget.IsValid())
+		{
+			WeakWidget->OnAttributeChange(Pair, AttributeSet.Get()); // For changes during the game
+		}
 	});
 }
