@@ -12,5 +12,6 @@ void UCC_AttributeWidget::OnAttributeChange(const TTuple<FGameplayAttribute, FGa
 {
 	const float AttributeValue = Pair.Key.GetNumericValue(AttributeSet);
 	const float MaxAttributeValue = Pair.Value.GetNumericValue(AttributeSet);
+
 	BP_OnAttributeChange(AttributeValue, MaxAttributeValue);
 }

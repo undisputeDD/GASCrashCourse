@@ -48,6 +48,7 @@ UAttributeSet* ACC_PlayerCharacter::GetAttributeSet() const
 {
 	auto CCPlayerState = Cast<ACC_PlayerState>(GetPlayerState());
 	if (!IsValid(CCPlayerState)) return nullptr;
+
 	return CCPlayerState->GetAttributeSet();
 }
 
