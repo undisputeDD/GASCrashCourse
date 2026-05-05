@@ -10,6 +10,7 @@
 class UGameplayAbility;
 class UGameplayEffect;
 class UAttributeSet;
+struct FOnAttributeChangeData;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FASCInitialized, UAbilitySystemComponent*, ASC, UAttributeSet*, AS);
 
@@ -20,6 +21,9 @@ class GASCRASHCOURSE_API ACC_BaseCharacter : public ACharacter, public IAbilityS
 
 public:
 	ACC_BaseCharacter();
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	virtual UAttributeSet* GetAttributeSet() const;
@@ -27,10 +31,20 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FASCInitialized OnASCInitialized;
 
+	bool IsAlive() const { return bAlive; }
+	void SetAlive(bool bAliveStatus) { bAlive = bAliveStatus; }
+
+	UFUNCTION(BlueprintCallable, Category = "Crash|Death")
+	virtual void HandleRespawn();
+
 protected:
 	void GiveStartupAbilities();
 
 	void InitializeAttributes() const;
+
+	void OnHealthChange(const FOnAttributeChangeData& AttributeChangeData);
+
+	virtual void HandleDeath();
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Crash|Abilities")
@@ -38,4 +52,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Crash|Effects")
 	TSubclassOf<UGameplayEffect> InitializeAttributesEffect;
+
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Replicated)
+	bool bAlive = true;
 };
