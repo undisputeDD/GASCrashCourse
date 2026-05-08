@@ -74,3 +74,10 @@ void ACC_BaseCharacter::HandleRespawn()
 {
 	bAlive = true;
 }
+
+void ACC_BaseCharacter::ResetAttributes()
+{
+	if (!HasAuthority()) return;
+
+	bAlive = true;
+}
