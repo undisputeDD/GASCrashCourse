@@ -5,6 +5,11 @@
 #include "AbilitySystemComponent.h"
 #include "Net/UnrealNetwork.h"
 
+namespace CrashTags
+{
+	const FName Player = FName("Player");
+}
+
 ACC_BaseCharacter::ACC_BaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = false;
