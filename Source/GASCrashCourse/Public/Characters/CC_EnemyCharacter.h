@@ -32,6 +32,8 @@ public:
 protected:
 	void BeginPlay();
 
+	virtual void HandleDeath() override;
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;

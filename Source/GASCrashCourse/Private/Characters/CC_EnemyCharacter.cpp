@@ -4,6 +4,7 @@
 #include "Characters/CC_EnemyCharacter.h"
 #include "AbilitySystem/CC_AbilitySystemComponent.h"
 #include "AbilitySystem/CC_AttributeSet.h"
+#include "AIController.h"
 
 ACC_EnemyCharacter::ACC_EnemyCharacter()
 {
@@ -44,4 +45,14 @@ void ACC_EnemyCharacter::BeginPlay()
 	if (!IsValid(CC_AttributeSet)) return;
 
 	GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(CC_AttributeSet->GetHealthAttribute()).AddUObject(this, &ThisClass::OnHealthChange);
+}
+
+void ACC_EnemyCharacter::HandleDeath()
+{
+	Super::HandleDeath();
+
+	AAIController* AIController = GetController<AAIController>();
+	if (!IsValid(AIController)) return;
+
+	AIController->StopMovement();
 }
