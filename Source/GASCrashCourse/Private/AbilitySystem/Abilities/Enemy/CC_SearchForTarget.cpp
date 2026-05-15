@@ -52,7 +52,7 @@ void UCC_SearchForTarget::StartSearch()
 	if (SearchDelayTask)
 	{
 		SearchDelayTask->OnFinish.AddDynamic(this, &UCC_SearchForTarget::Search);
-		SearchDelayTask->Activate();
+		SearchDelayTask->ReadyForActivation();
 	}
 }
 
@@ -121,7 +121,7 @@ void UCC_SearchForTarget::AttackTarget(TEnumAsByte<EPathFollowingResult::Type> R
 	if (AttackDelayTask)
 	{
 		AttackDelayTask->OnFinish.AddDynamic(this, &UCC_SearchForTarget::Attack);
-		AttackDelayTask->Activate();
+		AttackDelayTask->ReadyForActivation();
 	}
 }
 
