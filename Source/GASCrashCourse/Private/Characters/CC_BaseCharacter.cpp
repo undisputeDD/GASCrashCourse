@@ -77,11 +77,7 @@ void ACC_BaseCharacter::HandleRespawn()
 
 void ACC_BaseCharacter::ResetAttributes()
 {
-	if (!IsValid(ResetAttributesEffect))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("ResetAttributesEffect is not set on %s!"), *GetName());
-		return;
-	}
+	checkf(IsValid(ResetAttributesEffect), TEXT("ResetAttributesEffect not set."));
 
 	UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
 	if (!IsValid(ASC))
