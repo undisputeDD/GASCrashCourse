@@ -77,10 +77,23 @@ void ACC_BaseCharacter::HandleRespawn()
 
 void ACC_BaseCharacter::ResetAttributes()
 {
-	checkf(IsValid(ResetAttributesEffect), TEXT("ResetAttributesEffect not set."));
+	if (!IsValid(ResetAttributesEffect))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ResetAttributesEffect is not set on %s!"), *GetName());
+		return;
+	}
 
-	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
-	FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(ResetAttributesEffect, 1.f, ContextHandle);
+	UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+	if (!IsValid(ASC))
+	{
+		return;
+	}
 
-	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+	FGameplayEffectContextHandle ContextHandle = ASC->MakeEffectContext();
+	FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(ResetAttributesEffect, 1.f, ContextHandle);
+
+	if (SpecHandle.IsValid())
+	{
+		ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+	}
 }
