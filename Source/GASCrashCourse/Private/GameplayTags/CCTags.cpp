@@ -2,6 +2,11 @@
 
 namespace CCTags
 {
+	namespace SetByCaller
+	{
+		UE_DEFINE_GAMEPLAY_TAG_COMMENT(Projectile, "CCTags.SetByCaller.Projectile", "Tag for the SetByCaller Magnitude for Projectiles");
+	}
+
 	namespace CCAbilities
 	{
 		UE_DEFINE_GAMEPLAY_TAG_COMMENT(Primary, "CCTags.CCAbilities.Primary", "Tag for the Primary Ability");

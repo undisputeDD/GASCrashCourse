@@ -6,6 +6,8 @@
 #include "Characters/CC_PlayerCharacter.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemGlobals.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "GameplayTags/CCTags.h"
 
 // Sets default values
 ACC_Projectile::ACC_Projectile()
@@ -38,6 +40,8 @@ void ACC_Projectile::NotifyActorBeginOverlap(AActor* OtherActor)
 
 			if (SpecHandle.IsValid())
 			{
+				UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, CCTags::SetByCaller::Projectile, Damage);
+
 				TargetASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 			}
 		}
