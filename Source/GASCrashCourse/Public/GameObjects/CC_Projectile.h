@@ -21,6 +21,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Crash|Damage", meta = (ExposeOnSpawn, ClampMin = "0.0"))
 	float Damage{10.f};
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Crash|Projectile")
+	void SpawnImpactEffects();
+
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Crash|Projectile")
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovement;

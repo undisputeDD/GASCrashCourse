@@ -5,6 +5,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Characters/CC_PlayerCharacter.h"
 #include "AbilitySystemComponent.h"
+#include "AbilitySystemGlobals.h"
 
 // Sets default values
 ACC_Projectile::ACC_Projectile()
@@ -21,18 +22,29 @@ void ACC_Projectile::NotifyActorBeginOverlap(AActor* OtherActor)
 	Super::NotifyActorBeginOverlap(OtherActor);
 
 	ACC_PlayerCharacter* PlayerCharacter = Cast<ACC_PlayerCharacter>(OtherActor);
-	if (!IsValid(PlayerCharacter) || !PlayerCharacter->IsAlive()) return;
 
-	UAbilitySystemComponent* AbilitySystemComponent = PlayerCharacter->GetAbilitySystemComponent();
-	if (!IsValid(AbilitySystemComponent) || !HasAuthority()) return;
+	if (IsValid(PlayerCharacter) && PlayerCharacter->IsAlive())
+	{
+		UAbilitySystemComponent* TargetASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(PlayerCharacter);
 
-	FGameplayEffectContextHandle ContextHandle = AbilitySystemComponent->MakeEffectContext();
-	FGameplayEffectSpecHandle SpecHandle = AbilitySystemComponent->MakeOutgoingSpec(DamageEffect, 1.f, ContextHandle);
+		UAbilitySystemComponent* SourceASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(GetInstigator());
 
-	// TODO: Use the damage variable for the amount of damage to cause
+		if (IsValid(TargetASC) && IsValid(SourceASC) && HasAuthority())
+		{
+			FGameplayEffectContextHandle ContextHandle = SourceASC->MakeEffectContext();
 
-	AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
-	
+			ContextHandle.AddInstigator(GetInstigator(), this);
+			FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffect, 1.f, ContextHandle);
+
+			if (SpecHandle.IsValid())
+			{
+				TargetASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+			}
+		}
+	}
+
+	SpawnImpactEffects();
+
 	Destroy();
 }
 
