@@ -18,14 +18,17 @@ public:
 	virtual void NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime, const FAnimNotifyEventReference& EventReference) override;
 
 private:
-	TArray<FHitResult> PerformSphereTrace(USkeletalMeshComponent* MeshComp);
+	TArray<FHitResult> PerformSphereTrace(USkeletalMeshComponent* MeshComp) const;
 
-	void SendEventsToActors(USkeletalMeshComponent* MeshComp, const TArray<FHitResult>& Hits);
+	void SendEventsToActors(USkeletalMeshComponent* MeshComp, const TArray<FHitResult>& Hits) const;
 
 private:
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditAnywhere, Category = "Crash|Socket")
 	FName SocketName;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditAnywhere, Category = "Crash|Socket")
 	float SocketExtensionOffset;
+
+	UPROPERTY(EditAnywhere, Category = "Crash|Socket")
+	float SphereTraceRadius = 60.0f;
 };

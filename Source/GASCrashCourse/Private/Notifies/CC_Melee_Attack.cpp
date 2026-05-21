@@ -16,13 +16,13 @@ void UCC_Melee_Attack::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenc
 
 	if (!IsValid(MeshComp) || !IsValid(MeshComp->GetOwner())) return;
 
-	PerformSphereTrace(MeshComp);
+	TArray<FHitResult> Hits = PerformSphereTrace(MeshComp);
+	SendEventsToActors(MeshComp, Hits);
 }
 
-TArray<FHitResult> UCC_Melee_Attack::PerformSphereTrace(USkeletalMeshComponent* MeshComp)
+TArray<FHitResult> UCC_Melee_Attack::PerformSphereTrace(USkeletalMeshComponent* MeshComp) const
 {
 	FVector Start, End, ExtendedSocketDirection;
-	float SphereTraceRadius = 25.0f;
 
 	FTransform Transform = MeshComp->GetSocketTransform(SocketName);
 	Start = Transform.GetLocation();
@@ -31,36 +31,40 @@ TArray<FHitResult> UCC_Melee_Attack::PerformSphereTrace(USkeletalMeshComponent* 
 
 	TArray<FHitResult> OutResults;
 	FCollisionShape TraceSphere = FCollisionShape::MakeSphere(SphereTraceRadius);
-	//FCollisionQueryParams QueryParams;
-	//QueryParams.AddIgnoredActor(MeshComp->GetOwner());
-	//GetWorld()->SweepMultiByChannel(OutResults, Start, End, FQuat::Identity, ECollisionChannel::ECC_Visibility, TraceSphere, QueryParams);
-	GetWorld()->SweepMultiByChannel(OutResults, Start, End, FQuat::Identity, ECollisionChannel::ECC_Visibility, TraceSphere);
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(MeshComp->GetOwner());
+	MeshComp->GetWorld()->SweepMultiByChannel(OutResults, Start, End, FQuat::Identity, ECollisionChannel::ECC_Visibility, TraceSphere, QueryParams);
+	//MeshComp->GetWorld()->SweepMultiByChannel(OutResults, Start, End, FQuat::Identity, ECollisionChannel::ECC_Visibility, TraceSphere);
 
 	return OutResults;
 }
 
-void UCC_Melee_Attack::SendEventsToActors(USkeletalMeshComponent* MeshComp, const TArray<FHitResult>& Hits)
+void UCC_Melee_Attack::SendEventsToActors(USkeletalMeshComponent* MeshComp, const TArray<FHitResult>& Hits) const
 {
+	ACC_EnemyCharacter* EnemyCharacter = Cast<ACC_EnemyCharacter>(MeshComp->GetOwner());
+	if (!IsValid(EnemyCharacter)) return;
+
+	UAbilitySystemComponent* ASC = EnemyCharacter->GetAbilitySystemComponent();
+	if (!IsValid(ASC)) return;
+
 	for (const FHitResult& Hit : Hits)
 	{
 		AActor* HitActor = Hit.GetActor();
 
-		ACC_EnemyCharacter* EnemyCharacter = Cast<ACC_EnemyCharacter>(MeshComp->GetOwner());
-		if (!IsValid(EnemyCharacter)) continue;
+		ACC_PlayerCharacter* PlayerCharacter = Cast<ACC_PlayerCharacter>(HitActor);
+		if (!IsValid(PlayerCharacter) || !PlayerCharacter->IsAlive()) continue;
 
-		UAbilitySystemComponent* ASC = EnemyCharacter->GetAbilitySystemComponent();
-		if (!IsValid(ASC)) continue;
+		UAbilitySystemComponent* VictimASC = PlayerCharacter->GetAbilitySystemComponent();
+		if (!IsValid(VictimASC)) continue;
 
 		FGameplayEffectContextHandle ContextHandle = ASC->MakeEffectContext();
 
 		ContextHandle.AddHitResult(Hit);
 
-		ACC_PlayerCharacter* PlayerCharacter = Cast<ACC_PlayerCharacter>(HitActor);
-		if (!IsValid(PlayerCharacter)) continue;
-
 		FGameplayEventData Payload;
 		Payload.Target = PlayerCharacter;
 		Payload.ContextHandle = ContextHandle;
+		Payload.Instigator = MeshComp->GetOwner();
 
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(EnemyCharacter, CCTags::Events::Enemy::MeleeHitTrace, Payload);
 	}
