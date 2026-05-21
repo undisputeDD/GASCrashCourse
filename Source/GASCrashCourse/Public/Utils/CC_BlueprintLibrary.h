@@ -27,6 +27,9 @@ struct FClosestActorWithTagResult
 	float Distance{ 0.f };
 };
 
+struct FGameplayEventData;
+struct FGameplayTag;
+
 UCLASS()
 class GASCRASHCOURSE_API UCC_BlueprintLibrary : public UBlueprintFunctionLibrary
 {
@@ -40,4 +43,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	static FClosestActorWithTagResult FindClosestActorWithTag(const UObject* WorldContextObject, const FVector& Origin, const FName& Tag);
+
+	UFUNCTION(BlueprintCallable)
+	static void SendDamageEventToPlayer(AActor* Target, const TSubclassOf<UGameplayEffect>& DamageEffect, const FGameplayEventData& Payload, const FGameplayTag& DataTag, float Damage);
 };

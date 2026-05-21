@@ -8,6 +8,7 @@
 #include "AbilitySystemGlobals.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayTags/CCTags.h"
+#include "Utils/CC_BlueprintLibrary.h"
 
 // Sets default values
 ACC_Projectile::ACC_Projectile()
@@ -29,21 +30,13 @@ void ACC_Projectile::NotifyActorBeginOverlap(AActor* OtherActor)
 	{
 		UAbilitySystemComponent* TargetASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(PlayerCharacter);
 
-		UAbilitySystemComponent* SourceASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(GetInstigator());
-
-		if (IsValid(TargetASC) && IsValid(SourceASC) && HasAuthority())
+		if (IsValid(TargetASC) && HasAuthority())
 		{
-			FGameplayEffectContextHandle ContextHandle = SourceASC->MakeEffectContext();
+			FGameplayEventData Payload;
+			Payload.Instigator = GetOwner();
+			Payload.Target = PlayerCharacter;
 
-			ContextHandle.AddInstigator(GetInstigator(), this);
-			FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffect, 1.f, ContextHandle);
-
-			if (SpecHandle.IsValid())
-			{
-				UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, CCTags::SetByCaller::Projectile, Damage);
-
-				TargetASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
-			}
+			UCC_BlueprintLibrary::SendDamageEventToPlayer(PlayerCharacter, DamageEffect, Payload, CCTags::SetByCaller::Projectile, Damage);
 		}
 	}
 
