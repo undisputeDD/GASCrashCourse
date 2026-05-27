@@ -128,8 +128,43 @@ void UCC_SearchForTarget::AttackTarget(TEnumAsByte<EPathFollowingResult::Type> R
 void UCC_SearchForTarget::Attack()
 {
 	const FGameplayTag AttackTag = CCTags::CCAbilities::Enemy::Attack;
+	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo();
 
-	GetAbilitySystemComponentFromActorInfo()->TryActivateAbilitiesByTag(AttackTag.GetSingleTagContainer());
+	TArray<FGameplayAbilitySpec*> ActivatableSpecs;
+	ASC->GetActivatableGameplayAbilitySpecsByAllMatchingTags(AttackTag.GetSingleTagContainer(), ActivatableSpecs);
+
+	if (ActivatableSpecs.Num() == 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("FATAL: Ability with tag %s not found in ASC!"), *AttackTag.ToString());
+	}
+
+	for (FGameplayAbilitySpec* Spec : ActivatableSpecs)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Ability found! Level: %d"), Spec->Level);
+	}
+
+	bool bSuccessfullyStarted = ASC->TryActivateAbilitiesByTag(AttackTag.GetSingleTagContainer());
+
+	if (!bSuccessfullyStarted)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Attack not Success!"));
+
+		FGameplayTagContainer AllTags;
+		ASC->GetOwnedGameplayTags(AllTags);
+		UE_LOG(LogTemp, Warning, TEXT("All tags on bot: %s"), *AllTags.ToString());
+
+		TArray<FActiveGameplayEffectHandle> ActiveEffects = ASC->GetActiveEffectsWithAllTags(FGameplayTagContainer());
+		for (FActiveGameplayEffectHandle Handle : ActiveEffects)
+		{
+			const FActiveGameplayEffect* ActiveEffect = ASC->GetActiveGameplayEffect(Handle);
+			if (ActiveEffect)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Active Effect: %s"), *ActiveEffect->Spec.Def->GetName());
+			}
+		}
+
+		StartSearch();
+	}
 }
 
 void UCC_SearchForTarget::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)

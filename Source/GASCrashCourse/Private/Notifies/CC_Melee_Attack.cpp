@@ -20,6 +20,11 @@ void UCC_Melee_Attack::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenc
 	SendEventsToActors(MeshComp, Hits);
 }
 
+void UCC_Melee_Attack::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration)
+{
+	AlreadyHitActors.Empty();
+}
+
 TArray<FHitResult> UCC_Melee_Attack::PerformSphereTrace(USkeletalMeshComponent* MeshComp) const
 {
 	FVector Start, End, ExtendedSocketDirection;
@@ -39,7 +44,7 @@ TArray<FHitResult> UCC_Melee_Attack::PerformSphereTrace(USkeletalMeshComponent* 
 	return OutResults;
 }
 
-void UCC_Melee_Attack::SendEventsToActors(USkeletalMeshComponent* MeshComp, const TArray<FHitResult>& Hits) const
+void UCC_Melee_Attack::SendEventsToActors(USkeletalMeshComponent* MeshComp, const TArray<FHitResult>& Hits)
 {
 	ACC_EnemyCharacter* EnemyCharacter = Cast<ACC_EnemyCharacter>(MeshComp->GetOwner());
 	if (!IsValid(EnemyCharacter)) return;
@@ -50,6 +55,10 @@ void UCC_Melee_Attack::SendEventsToActors(USkeletalMeshComponent* MeshComp, cons
 	for (const FHitResult& Hit : Hits)
 	{
 		AActor* HitActor = Hit.GetActor();
+
+		if (AlreadyHitActors.Contains(HitActor)) continue;
+
+		AlreadyHitActors.Add(HitActor);
 
 		ACC_PlayerCharacter* PlayerCharacter = Cast<ACC_PlayerCharacter>(HitActor);
 		if (!IsValid(PlayerCharacter) || !PlayerCharacter->IsAlive()) continue;

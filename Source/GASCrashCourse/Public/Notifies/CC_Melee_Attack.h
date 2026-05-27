@@ -17,10 +17,12 @@ class GASCRASHCOURSE_API UCC_Melee_Attack : public UAnimNotifyState
 public:
 	virtual void NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime, const FAnimNotifyEventReference& EventReference) override;
 
+	virtual void NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration);
+
 private:
 	TArray<FHitResult> PerformSphereTrace(USkeletalMeshComponent* MeshComp) const;
 
-	void SendEventsToActors(USkeletalMeshComponent* MeshComp, const TArray<FHitResult>& Hits) const;
+	void SendEventsToActors(USkeletalMeshComponent* MeshComp, const TArray<FHitResult>& Hits);
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Crash|Socket")
@@ -31,4 +33,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Crash|Socket")
 	float SphereTraceRadius = 60.0f;
+
+	UPROPERTY()
+	TSet<AActor*> AlreadyHitActors;
 };
