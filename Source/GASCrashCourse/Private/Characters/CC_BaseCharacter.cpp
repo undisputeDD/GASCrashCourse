@@ -68,6 +68,13 @@ void ACC_BaseCharacter::OnHealthChange(const FOnAttributeChangeData& AttributeCh
 void ACC_BaseCharacter::HandleDeath()
 {
 	bAlive = false;
+
+	UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+	if (!IsValid(ASC))
+	{
+		return;
+	}
+	ASC->CancelAbilities(nullptr, nullptr, nullptr);
 }
 
 void ACC_BaseCharacter::HandleRespawn()

@@ -141,6 +141,29 @@ void UCC_SearchForTarget::Attack()
 	for (FGameplayAbilitySpec* Spec : ActivatableSpecs)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Ability found! Level: %d"), Spec->Level);
+
+		if (Spec->IsActive())
+		{
+			UE_LOG(LogTemp, Error, TEXT("FATAL: Ability [%s] IS ALREADY ACTIVE! It never called EndAbility!"), *Spec->Ability->GetName());
+		}
+
+		FGameplayTagContainer FailureTags;
+		bool bCanActivate = Spec->Ability->CanActivateAbility(
+			Spec->Handle,
+			ASC->AbilityActorInfo.Get(),
+			&FailureTags
+		);
+
+		if (!bCanActivate)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Ability [%s] failed to activate! Reason tags: %s"),
+				*Spec->Ability->GetName(),
+				*FailureTags.ToString());
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Ability [%s] CAN be activated. No blocks found."), *Spec->Ability->GetName());
+		}
 	}
 
 	bool bSuccessfullyStarted = ASC->TryActivateAbilitiesByTag(AttackTag.GetSingleTagContainer());
