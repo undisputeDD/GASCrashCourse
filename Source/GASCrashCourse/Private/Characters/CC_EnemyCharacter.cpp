@@ -5,6 +5,7 @@
 #include "AbilitySystem/CC_AbilitySystemComponent.h"
 #include "AbilitySystem/CC_AttributeSet.h"
 #include "AIController.h"
+#include "GameplayTags/CCTags.h"
 
 ACC_EnemyCharacter::ACC_EnemyCharacter()
 {
@@ -55,4 +56,8 @@ void ACC_EnemyCharacter::HandleDeath()
 	if (!IsValid(AIController)) return;
 
 	AIController->StopMovement();
+
+	FGameplayTagContainer AbilitiesToDeactivate;
+	AbilitiesToDeactivate.AddTag(CCTags::CCAbilities::Enemy::Attack);
+	AbilitySystemComponent->CancelAbilities(&AbilitiesToDeactivate, nullptr, nullptr);
 }
