@@ -39,7 +39,7 @@ void UCC_SearchForTarget::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 void UCC_SearchForTarget::StartSearch()
 {
 	if (bDrawDebugs) GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, FString::Printf(TEXT("UCC_SearchForTarget::StartSearch")));
-	if (!OwningEnemy.IsValid()) return;
+	if (!OwningEnemy.IsValid() || !OwningEnemy->IsAlive()) return;
 
 	if (SearchDelayTask)
 	{
@@ -89,7 +89,6 @@ void UCC_SearchForTarget::MoveToTargetAndAttack()
 
 	if (!OwningEnemy->IsAlive())
 	{
-		StartSearch();
 		return;
 	}
 

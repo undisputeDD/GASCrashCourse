@@ -20,6 +20,7 @@ namespace CCTags
 		namespace Enemy
 		{
 			UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attack);
+			UE_DECLARE_GAMEPLAY_TAG_EXTERN(SearchForTarget);
 		}
 	}
 

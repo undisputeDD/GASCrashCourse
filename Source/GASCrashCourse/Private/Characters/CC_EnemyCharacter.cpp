@@ -61,3 +61,12 @@ void ACC_EnemyCharacter::HandleDeath()
 	AbilitiesToDeactivate.AddTag(CCTags::CCAbilities::Enemy::Attack);
 	AbilitySystemComponent->CancelAbilities(&AbilitiesToDeactivate);
 }
+
+void ACC_EnemyCharacter::HandleRespawn()
+{
+	Super::HandleRespawn();
+
+	FGameplayTagContainer AbilityTagContainer;
+	AbilityTagContainer.AddTag(CCTags::CCAbilities::Enemy::SearchForTarget);
+	AbilitySystemComponent->TryActivateAbilitiesByTag(AbilityTagContainer);
+}

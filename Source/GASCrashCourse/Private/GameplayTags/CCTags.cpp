@@ -17,6 +17,7 @@ namespace CCTags
 		namespace Enemy
 		{
 			UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attack, "CCTags.CCAbilities.Enemy.Attack", "Tag for the Attack Enemy Ability");
+			UE_DEFINE_GAMEPLAY_TAG_COMMENT(SearchForTarget, "CCTags.CCAbilities.Enemy.SearchForTarget", "Tag for the SearchForTarget Enemy Ability");
 		}
 	}
 

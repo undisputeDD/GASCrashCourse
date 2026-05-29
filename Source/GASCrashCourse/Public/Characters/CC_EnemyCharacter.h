@@ -37,6 +37,8 @@ protected:
 
 	virtual void HandleDeath() override;
 
+	virtual void HandleRespawn() override;
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
