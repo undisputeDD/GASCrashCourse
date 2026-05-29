@@ -54,4 +54,9 @@ private:
 	void ActivateAbility(const FGameplayTag& AbilityTag);
 
 	bool IsAlive() const;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Crash|Input|Debug")
+	TObjectPtr<UInputAction> AbilityDebugAction;
+
+	void AbilityDebugAbility();
 };

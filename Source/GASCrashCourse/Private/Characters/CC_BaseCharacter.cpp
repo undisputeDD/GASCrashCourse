@@ -93,3 +93,39 @@ void ACC_BaseCharacter::ResetAttributes()
 		ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 	}
 }
+
+void ACC_BaseCharacter::PrintActiveAbilities()
+{
+	UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+	if (!IsValid(ASC))
+	{
+		UE_LOG(LogTemp, Error, TEXT("PrintActiveAbilities: ASC is null!"));
+		return;
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("=== CURRENTLY ACTIVE ABILITIES ==="));
+	int32 ActiveCount = 0;
+
+	for (const FGameplayAbilitySpec& Spec : ASC->GetActivatableAbilities())
+	{
+		if (Spec.IsActive())
+		{
+			FString AbilityName = Spec.Ability ? Spec.Ability->GetName() : TEXT("UnknownAbility");
+
+			UE_LOG(LogTemp, Warning, TEXT(" -> Active: %s (Level: %d)"), *AbilityName, Spec.Level);
+
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString::Printf(TEXT("ACTIVE: %s"), *AbilityName));
+			}
+
+			ActiveCount++;
+		}
+	}
+
+	if (ActiveCount == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT(" -> No active abilities found."));
+	}
+	UE_LOG(LogTemp, Warning, TEXT("=================================="));
+}

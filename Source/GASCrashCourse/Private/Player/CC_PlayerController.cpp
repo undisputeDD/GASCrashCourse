@@ -35,6 +35,8 @@ void ACC_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(PrimaryAction, ETriggerEvent::Triggered, this, &ThisClass::PrimaryAbility);
 	EnhancedInputComponent->BindAction(SecondaryAction, ETriggerEvent::Started, this, &ThisClass::SecondaryAbility);
 	EnhancedInputComponent->BindAction(TertiaryAction, ETriggerEvent::Started, this, &ThisClass::TertiaryAbility);
+	
+	EnhancedInputComponent->BindAction(AbilityDebugAction, ETriggerEvent::Started, this, &ThisClass::AbilityDebugAbility);
 }
 
 void ACC_PlayerController::Jump()
@@ -110,4 +112,12 @@ bool ACC_PlayerController::IsAlive() const
 	ACC_BaseCharacter* BaseCharacter = Cast<ACC_BaseCharacter>(GetPawn());
 	if (!IsValid(BaseCharacter)) return false;
 	return BaseCharacter->IsAlive();
+}
+
+void ACC_PlayerController::AbilityDebugAbility()
+{
+	ACC_BaseCharacter* BaseCharacter = Cast<ACC_BaseCharacter>(GetPawn());
+	if (!IsValid(BaseCharacter)) return;
+
+	BaseCharacter->PrintActiveAbilities();
 }

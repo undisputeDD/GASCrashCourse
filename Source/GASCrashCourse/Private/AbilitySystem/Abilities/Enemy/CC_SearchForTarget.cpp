@@ -127,6 +127,12 @@ void UCC_SearchForTarget::AttackTarget(TEnumAsByte<EPathFollowingResult::Type> R
 
 void UCC_SearchForTarget::Attack()
 {
+	if (!OwningEnemy.IsValid() || !OwningEnemy->IsAlive())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Attack aborted because the bot is DEAD."));
+		return;
+	}
+
 	const FGameplayTag AttackTag = CCTags::CCAbilities::Enemy::Attack;
 	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo();
 

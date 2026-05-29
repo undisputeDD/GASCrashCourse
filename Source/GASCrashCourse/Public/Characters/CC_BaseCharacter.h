@@ -48,6 +48,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void RotateToTarget(AActor* RotateTarget);
 
+	UFUNCTION(BlueprintCallable)
+	void PrintActiveAbilities();
+
 protected:
 	void GiveStartupAbilities();
 
