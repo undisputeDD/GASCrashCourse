@@ -59,5 +59,5 @@ void ACC_EnemyCharacter::HandleDeath()
 
 	FGameplayTagContainer AbilitiesToDeactivate;
 	AbilitiesToDeactivate.AddTag(CCTags::CCAbilities::Enemy::Attack);
-	AbilitySystemComponent->CancelAbilities(&AbilitiesToDeactivate, nullptr, nullptr);
+	AbilitySystemComponent->CancelAbilities(&AbilitiesToDeactivate);
 }
