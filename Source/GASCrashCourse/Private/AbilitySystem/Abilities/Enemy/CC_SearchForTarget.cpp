@@ -145,7 +145,7 @@ void UCC_SearchForTarget::Attack()
 
 	for (FGameplayAbilitySpec* Spec : ActivatableSpecs)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Ability found! Level: %d"), Spec->Level);
+		UE_LOG(LogTemp, Warning, TEXT("Ability %s found! Level: %d"), *Spec->Ability->GetName(), Spec->Level);
 
 		if (Spec->IsActive())
 		{
