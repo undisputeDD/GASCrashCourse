@@ -9,6 +9,7 @@
 #include "AbilitySystem/CC_AttributeSet.h"
 #include "GameplayTags/CCTags.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "Engine/OverlapResult.h"
 
 EHitDirection UCC_BlueprintLibrary::GetHitDirection(const FVector& TargetForward, const FVector& ToInstigator)
 {
@@ -100,4 +101,59 @@ void UCC_BlueprintLibrary::SendDamageEventToPlayer(AActor* Target, const TSubcla
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, DataTag, -Damage);
 
 	TargetASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+}
+
+TArray<AActor*> UCC_BlueprintLibrary::HitBoxOverlapTest(AActor* AvatarActor, float HitBoxRadius, float HitBoxForwardOffset, float HitBoxElevationOffset, bool bDrawDebugs)
+{
+	if (!IsValid(AvatarActor)) return TArray<AActor*>();
+
+	// Ensure that the overlap test ignores the Avatar Actor
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(AvatarActor);
+
+	FCollisionResponseParams ResponseParams;
+	ResponseParams.CollisionResponse.SetAllChannels(ECR_Ignore);
+	ResponseParams.CollisionResponse.SetResponse(ECC_Pawn, ECR_Block);
+
+	TArray<FOverlapResult> OverlapResults;
+	FCollisionShape Sphere = FCollisionShape::MakeSphere(HitBoxRadius);
+
+	const FVector Forward = AvatarActor->GetActorForwardVector() * HitBoxForwardOffset;
+	const FVector HitBoxLocation = AvatarActor->GetActorLocation() + Forward + FVector(0, 0, HitBoxElevationOffset);
+
+	UWorld* World = GEngine->GetWorldFromContextObject(AvatarActor, EGetWorldErrorMode::LogAndReturnNull);
+	if (!IsValid(World)) return TArray<AActor*>();
+
+	World->OverlapMultiByChannel(OverlapResults, HitBoxLocation, FQuat::Identity, ECC_Visibility, Sphere, QueryParams, ResponseParams);
+
+	TArray<AActor*> ActorsHit;
+	for (const FOverlapResult& Result : OverlapResults)
+	{
+		ACC_BaseCharacter* BaseCharacter = Cast<ACC_BaseCharacter>(Result.GetActor());
+		if (!IsValid(BaseCharacter)) continue;
+		if (BaseCharacter->IsAlive()) continue;
+		ActorsHit.AddUnique(Result.GetActor());
+	}
+
+	if (bDrawDebugs)
+	{
+		DrawHitBoxOverlapResults(World, OverlapResults, HitBoxLocation, HitBoxRadius);
+	}
+
+	return ActorsHit;
+}
+
+void UCC_BlueprintLibrary::DrawHitBoxOverlapResults(UWorld* World, const TArray<FOverlapResult>& OverlapResults, const FVector& HitBoxLocation, float HitBoxRadius)
+{
+	DrawDebugSphere(World, HitBoxLocation, HitBoxRadius, 16, FColor::Blue, false, 3.f);
+
+	for (const FOverlapResult& Result : OverlapResults)
+	{
+		if (IsValid(Result.GetActor()))
+		{
+			FVector DebugLocation = Result.GetActor()->GetActorLocation();
+			DebugLocation.Z += 100.f;
+			DrawDebugSphere(World, DebugLocation, 30.f, 10, FColor::Black, false, 3.f);
+		}
+	}
 }
