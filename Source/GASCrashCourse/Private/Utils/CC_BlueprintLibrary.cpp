@@ -131,7 +131,7 @@ TArray<AActor*> UCC_BlueprintLibrary::HitBoxOverlapTest(AActor* AvatarActor, flo
 	{
 		ACC_BaseCharacter* BaseCharacter = Cast<ACC_BaseCharacter>(Result.GetActor());
 		if (!IsValid(BaseCharacter)) continue;
-		if (BaseCharacter->IsAlive()) continue;
+		if (!BaseCharacter->IsAlive()) continue;
 		ActorsHit.AddUnique(Result.GetActor());
 	}
 
