@@ -16,9 +16,10 @@ UCLASS()
 class GASCRASHCOURSE_API ACC_EnemyCharacter : public ACC_BaseCharacter
 {
 	GENERATED_BODY()
-	
+
 public:
 	ACC_EnemyCharacter();
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	virtual UAttributeSet* GetAttributeSet() const override;
 
@@ -32,12 +33,21 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	float GetTimelineLength();
 
+	void StopMovementUntilLanded();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Replicated)
+	bool bIsBeingLaunched{ false };
+
 protected:
 	void BeginPlay();
 
 	virtual void HandleDeath() override;
 
 	virtual void HandleRespawn() override;
+
+private:
+	UFUNCTION()
+	void EnableMovementOnLanded(const FHitResult& Hit);
 
 private:
 	UPROPERTY(VisibleAnywhere)
