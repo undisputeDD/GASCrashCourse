@@ -81,8 +81,8 @@ FClosestActorWithTagResult UCC_BlueprintLibrary::FindClosestActorWithTag(const U
 
 void UCC_BlueprintLibrary::SendDamageEventToPlayer(AActor* Target, const TSubclassOf<UGameplayEffect>& DamageEffect, FGameplayEventData& Payload, const FGameplayTag& DataTag, float Damage, const FGameplayTag& EventTagOverride, UObject* OptionalParticleSystem)
 {
-	ACC_BaseCharacter* PlayerCharacter = Cast<ACC_BaseCharacter>(Target);
-	if (!IsValid(PlayerCharacter) || !PlayerCharacter->IsAlive()) return;
+	ACC_BaseCharacter* TargetCharacter = Cast<ACC_BaseCharacter>(Target);
+	if (!IsValid(TargetCharacter) || !TargetCharacter->IsAlive()) return;
 
 	FGameplayTag EventTag;
 	if (!EventTagOverride.MatchesTagExact(CCTags::None))
@@ -91,7 +91,7 @@ void UCC_BlueprintLibrary::SendDamageEventToPlayer(AActor* Target, const TSubcla
 	}
 	else
 	{
-		UCC_AttributeSet* AttributeSet = Cast<UCC_AttributeSet>(PlayerCharacter->GetAttributeSet());
+		UCC_AttributeSet* AttributeSet = Cast<UCC_AttributeSet>(TargetCharacter->GetAttributeSet());
 		if (!IsValid(AttributeSet)) return;
 
 		const bool bLethal = ((AttributeSet->GetHealth() - Damage) <= 0.f);
@@ -99,15 +99,13 @@ void UCC_BlueprintLibrary::SendDamageEventToPlayer(AActor* Target, const TSubcla
 	}
 
 	Payload.OptionalObject = OptionalParticleSystem;
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(PlayerCharacter, EventTag, Payload);
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(TargetCharacter, EventTag, Payload);
 
-	UAbilitySystemComponent* TargetASC = PlayerCharacter->GetAbilitySystemComponent();
+	UAbilitySystemComponent* TargetASC = TargetCharacter->GetAbilitySystemComponent();
 	if (!IsValid(TargetASC)) return;
 
 	FGameplayEffectContextHandle ContextHandle = TargetASC->MakeEffectContext();
 	FGameplayEffectSpecHandle SpecHandle = TargetASC->MakeOutgoingSpec(DamageEffect, 1.f, ContextHandle);
-
-	UE_LOG(LogTemp, Display, TEXT("%f damage"), Damage);
 
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, DataTag, -Damage);
 
