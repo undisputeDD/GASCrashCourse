@@ -38,6 +38,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Replicated)
 	bool bIsBeingLaunched{ false };
 
+	UPROPERTY(EditAnywhere, Category = "Crash|AI")
+	float SearchRange{ 1000.f };
+
 protected:
 	void BeginPlay();
 
