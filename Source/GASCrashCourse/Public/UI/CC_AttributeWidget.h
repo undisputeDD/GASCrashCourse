@@ -29,4 +29,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Crash|Attributes")
 	FGameplayAttribute MaxAttribute;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Crash|Attributes")
+	TWeakObjectPtr<AActor> AvatarActor;
 };

@@ -132,6 +132,8 @@ void UCC_WidgetComponent::BindWidgetToAttributeChanges(UWidget* WidgetObject, co
 
 	UE_LOG(LogTemp, Error, TEXT("+++ SUCCESS: Successfully bound Widget %s to %s"), *WidgetObject->GetName(), *Pair.Key.AttributeName);
 
+	AttributeWidget->AvatarActor = CrashCharacter;
+
 	AttributeWidget->OnAttributeChange(Pair, AttributeSet.Get(), 0.f); // For initial values
 	TWeakObjectPtr<UCC_AttributeWidget> WeakWidget(AttributeWidget);
 
