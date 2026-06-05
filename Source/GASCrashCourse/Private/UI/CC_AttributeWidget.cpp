@@ -8,10 +8,10 @@ bool UCC_AttributeWidget::MatchesAttributes(const TTuple<FGameplayAttribute, FGa
 	return Attribute == Pair.Key && MaxAttribute == Pair.Value;
 }
 
-void UCC_AttributeWidget::OnAttributeChange(const TTuple<FGameplayAttribute, FGameplayAttribute>& Pair, UCC_AttributeSet* AttributeSet)
+void UCC_AttributeWidget::OnAttributeChange(const TTuple<FGameplayAttribute, FGameplayAttribute>& Pair, UCC_AttributeSet* AttributeSet, float OldValue)
 {
 	const float AttributeValue = Pair.Key.GetNumericValue(AttributeSet);
 	const float MaxAttributeValue = Pair.Value.GetNumericValue(AttributeSet);
 
-	BP_OnAttributeChange(AttributeValue, MaxAttributeValue);
+	BP_OnAttributeChange(AttributeValue, MaxAttributeValue, OldValue);
 }

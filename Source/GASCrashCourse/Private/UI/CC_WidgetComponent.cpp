@@ -132,7 +132,7 @@ void UCC_WidgetComponent::BindWidgetToAttributeChanges(UWidget* WidgetObject, co
 
 	UE_LOG(LogTemp, Error, TEXT("+++ SUCCESS: Successfully bound Widget %s to %s"), *WidgetObject->GetName(), *Pair.Key.AttributeName);
 
-	AttributeWidget->OnAttributeChange(Pair, AttributeSet.Get()); // For initial values
+	AttributeWidget->OnAttributeChange(Pair, AttributeSet.Get(), 0.f); // For initial values
 	TWeakObjectPtr<UCC_AttributeWidget> WeakWidget(AttributeWidget);
 
 	auto DelegateLambda = [this, WeakWidget, Pair](const FOnAttributeChangeData& AttributeChangeData)
@@ -140,7 +140,7 @@ void UCC_WidgetComponent::BindWidgetToAttributeChanges(UWidget* WidgetObject, co
 			if (WeakWidget.IsValid())
 			{
 				UE_LOG(LogTemp, Warning, TEXT("Delegate fired for %s. New Value: %f"), *Pair.Key.AttributeName, AttributeChangeData.NewValue);
-				WeakWidget->OnAttributeChange(Pair, AttributeSet.Get());
+				WeakWidget->OnAttributeChange(Pair, AttributeSet.Get(), AttributeChangeData.OldValue);
 			}
 		};
 

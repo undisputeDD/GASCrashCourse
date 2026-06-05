@@ -18,10 +18,10 @@ class GASCRASHCOURSE_API UCC_AttributeWidget : public UUserWidget
 public:
 	bool MatchesAttributes(const TTuple<FGameplayAttribute, FGameplayAttribute>& Pair) const;
 
-	void OnAttributeChange(const TTuple<FGameplayAttribute, FGameplayAttribute>& Pair, UCC_AttributeSet* AttributeSet);
+	void OnAttributeChange(const TTuple<FGameplayAttribute, FGameplayAttribute>& Pair, UCC_AttributeSet* AttributeSet, float OldValue);
 		
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Attribute Change"))
-	void BP_OnAttributeChange(float NewValue, float NewMaxValue);
+	void BP_OnAttributeChange(float NewValue, float NewMaxValue, float OldValue);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Crash|Attributes")
