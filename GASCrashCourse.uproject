@@ -13,6 +13,14 @@
 				"GameplayAbilities",
 				"UMG"
 			]
+		},
+		{
+			"Name": "GASCrashCourseAI",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"AIModule"
+			]
 		}
 	],
 	"Plugins": [

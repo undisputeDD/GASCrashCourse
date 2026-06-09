@@ -2,9 +2,9 @@
 
 using UnrealBuildTool;
 
-public class GASCrashCourse : ModuleRules
+public class GASCrashCourseAI : ModuleRules
 {
-	public GASCrashCourse(ReadOnlyTargetRules Target) : base(Target)
+	public GASCrashCourseAI(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
@@ -14,14 +14,12 @@ public class GASCrashCourse : ModuleRules
 			"Core",
             "CoreUObject",
             "Engine",
-            "InputCore",
-            "EnhancedInput",
             "GameplayAbilities",
             "GameplayTasks",
             "GameplayTags",
-            "UMG",
 			"AIModule",
-			"NavigationSystem"
+			"NavigationSystem",
+			"GASCrashCourse"
 		});
 	}
 }
