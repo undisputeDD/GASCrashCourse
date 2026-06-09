@@ -22,9 +22,17 @@ void UCC_SearchForTarget::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
 	OwningEnemy = Cast<ACC_EnemyCharacter>(GetAvatarActorFromActorInfo());
-	if (!OwningEnemy.IsValid()) return;
+	if (!OwningEnemy.IsValid())
+	{
+		EndAbility(Handle, ActorInfo, ActivationInfo, true, true);
+		return;
+	}
 	OwningAIController = Cast<AAIController>(OwningEnemy->GetController());
-	if (!OwningAIController.IsValid()) return;
+	if (!OwningAIController.IsValid())
+	{
+		EndAbility(Handle, ActorInfo, ActivationInfo, true, true);
+		return;
+	}
 
 	StartSearch();
 
@@ -39,7 +47,11 @@ void UCC_SearchForTarget::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 void UCC_SearchForTarget::StartSearch()
 {
 	if (bDrawDebugs) GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, FString::Printf(TEXT("UCC_SearchForTarget::StartSearch")));
-	if (!OwningEnemy.IsValid() || !OwningEnemy->IsAlive()) return;
+	if (!OwningEnemy.IsValid() || !OwningEnemy->IsAlive())
+	{
+		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, true);
+		return;
+	}
 
 	if (SearchDelayTask)
 	{
