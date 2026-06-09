@@ -22,6 +22,6 @@ public class GASCrashCourse : ModuleRules
             "UMG",
 			"AIModule",
 			"NavigationSystem"
-		});
+        });
 	}
 }
