@@ -36,4 +36,6 @@ void UCC_BTService_FindTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8
 	{
 		Blackboard->ClearValue(FName("TargetActor"));
 	}
+
+	// DrawDebugSphere(ControlledPawn->GetWorld(), ControlledPawn->GetActorLocation(), SearchRange, 16, FColor::Blue, false, 3.f);
 }
