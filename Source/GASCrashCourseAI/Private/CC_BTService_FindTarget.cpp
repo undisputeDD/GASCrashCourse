@@ -6,22 +6,23 @@
 #include "AIController.h"
 #include "Utils/CC_BlueprintLibrary.h"
 #include "Characters/CC_BaseCharacter.h"
+#include "Characters/CC_EnemyCharacter.h"
 
 void UCC_BTService_FindTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
 	AAIController* AIController = OwnerComp.GetAIOwner();
-	if (!AIController) return;
+	if (!IsValid(AIController)) return;
 
-	APawn* ControlledPawn = AIController->GetPawn();
-	if (!ControlledPawn) return;
+	ACC_EnemyCharacter* EnemyCharacter = Cast<ACC_EnemyCharacter>(AIController->GetPawn());
+	if (!IsValid(EnemyCharacter) || !EnemyCharacter->IsAlive()) return;
 
 	FClosestActorWithTagResult ClosestActorResult = UCC_BlueprintLibrary::FindClosestActorWithTag(
-		ControlledPawn,
-		ControlledPawn->GetActorLocation(),
+		EnemyCharacter,
+		EnemyCharacter->GetActorLocation(),
 		CrashTags::Player,
-		SearchRange
+		EnemyCharacter->SearchRange
 	);
 
 	UBlackboardComponent* Blackboard = OwnerComp.GetBlackboardComponent();
@@ -37,5 +38,5 @@ void UCC_BTService_FindTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8
 		Blackboard->ClearValue(FName("TargetActor"));
 	}
 
-	// DrawDebugSphere(ControlledPawn->GetWorld(), ControlledPawn->GetActorLocation(), SearchRange, 16, FColor::Blue, false, 3.f);
+	// DrawDebugSphere(EnemyCharacter->GetWorld(), EnemyCharacter->GetActorLocation(), EnemyCharacter->SearchRange, 16, FColor::Blue, false, 3.f);
 }

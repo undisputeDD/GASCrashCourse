@@ -16,8 +16,4 @@ class GASCRASHCOURSEAI_API UCC_BTService_FindTarget : public UBTService
 	
 protected:
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
-
-private:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Crash|AI", meta = (AllowPrivateAccess = "true"))
-	float SearchRange{ 1000.f };
 };
