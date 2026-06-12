@@ -15,8 +15,18 @@ void UCC_BTService_FindTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8
 	AAIController* AIController = OwnerComp.GetAIOwner();
 	if (!IsValid(AIController)) return;
 
+	UBlackboardComponent* Blackboard = OwnerComp.GetBlackboardComponent();
+
 	ACC_EnemyCharacter* EnemyCharacter = Cast<ACC_EnemyCharacter>(AIController->GetPawn());
-	if (!IsValid(EnemyCharacter) || !EnemyCharacter->IsAlive()) return;
+	if (!IsValid(EnemyCharacter) || !EnemyCharacter->IsAlive())
+	{
+		if (Blackboard)
+		{
+			Blackboard->ClearValue(FName("TargetActor"));
+			Blackboard->SetValueAsBool(FName("bIsTargetInMeleeRange"), false);
+		}
+		return;
+	}
 
 	FClosestActorWithTagResult ClosestActorResult = UCC_BlueprintLibrary::FindClosestActorWithTag(
 		EnemyCharacter,
@@ -25,11 +35,9 @@ void UCC_BTService_FindTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8
 		EnemyCharacter->SearchRange
 	);
 
-	UBlackboardComponent* Blackboard = OwnerComp.GetBlackboardComponent();
-
 	ACC_BaseCharacter* TargetPlayerActor = Cast<ACC_BaseCharacter>(ClosestActorResult.Actor);
 
-	if (IsValid(TargetPlayerActor) && TargetPlayerActor->IsAlive())
+	if (IsValid(TargetPlayerActor) && TargetPlayerActor->IsAlive() && IsValid(Blackboard))
 	{
 		Blackboard->SetValueAsObject(FName("TargetActor"), TargetPlayerActor);
 		float DistanceToPlayer = FVector::Distance(EnemyCharacter->GetActorLocation(), TargetPlayerActor->GetActorLocation());
@@ -38,8 +46,11 @@ void UCC_BTService_FindTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8
 	}
 	else
 	{
-		Blackboard->ClearValue(FName("TargetActor"));
-		Blackboard->SetValueAsBool(FName("bIsTargetInMeleeRange"), false);
+		if (IsValid(Blackboard))
+		{
+			Blackboard->ClearValue(FName("TargetActor"));
+			Blackboard->SetValueAsBool(FName("bIsTargetInMeleeRange"), false);
+		}
 	}
 
 	// DrawDebugSphere(EnemyCharacter->GetWorld(), EnemyCharacter->GetActorLocation(), EnemyCharacter->SearchRange, 16, FColor::Blue, false, 3.f);
