@@ -8,6 +8,8 @@
 #include "GameplayTags/CCTags.h"
 #include "Net/UnrealNetwork.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "BrainComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 ACC_EnemyCharacter::ACC_EnemyCharacter()
 {
@@ -77,21 +79,20 @@ void ACC_EnemyCharacter::HandleDeath()
 	AAIController* AIController = GetController<AAIController>();
 	if (!IsValid(AIController)) return;
 
-	AIController->StopMovement();
+	AbilitySystemComponent->CancelAbilities();
 
-	FGameplayTagContainer AbilitiesToDeactivate;
-	AbilitiesToDeactivate.AddTag(CCTags::CCAbilities::Enemy::Attack);
-	AbilitiesToDeactivate.AddTag(CCTags::CCAbilities::Enemy::SearchForTarget);
-	AbilitySystemComponent->CancelAbilities(&AbilitiesToDeactivate);
+	AIController->StopMovement();
+	AIController->BrainComponent->StopLogic(TEXT("Dead"));
+
+	GetCharacterMovement()->StopMovementImmediately();
+	GetCharacterMovement()->DisableMovement();
+
+	DetachFromControllerPendingDestroy();
 }
 
 void ACC_EnemyCharacter::HandleRespawn()
 {
 	Super::HandleRespawn();
-
-	FGameplayTagContainer AbilityTagContainer;
-	AbilityTagContainer.AddTag(CCTags::CCAbilities::Enemy::SearchForTarget);
-	AbilitySystemComponent->TryActivateAbilitiesByTag(AbilityTagContainer);
 }
 
 void ACC_EnemyCharacter::EnableMovementOnLanded(const FHitResult& Hit)
