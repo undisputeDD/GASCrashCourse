@@ -38,6 +38,7 @@ EBTNodeResult::Type UCC_BTTask_ActivateAbility::ExecuteTask(UBehaviorTreeCompone
 
 	if (bAbilityFinishedInstantly)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Task finished instantly!"));
 		return EBTNodeResult::Succeeded;
 	}
 
