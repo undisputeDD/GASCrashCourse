@@ -42,6 +42,7 @@ EBTNodeResult::Type UCC_BTTask_ActivateAbility::ExecuteTask(UBehaviorTreeCompone
 		return EBTNodeResult::Succeeded;
 	}
 
+	UE_LOG(LogTemp, Warning, TEXT("Task is InProgress!"));
 	return EBTNodeResult::InProgress;
 }
 

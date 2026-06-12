@@ -32,10 +32,12 @@ void UCC_BTService_FindTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8
 	if (IsValid(TargetPlayerActor) && TargetPlayerActor->IsAlive())
 	{
 		Blackboard->SetValueAsObject(FName("TargetActor"), TargetPlayerActor);
+		Blackboard->SetValueAsBool(FName("bIsTargetInMeleeRange"), true);
 	}
 	else
 	{
 		Blackboard->ClearValue(FName("TargetActor"));
+		Blackboard->SetValueAsBool(FName("bIsTargetInMeleeRange"), false);
 	}
 
 	// DrawDebugSphere(EnemyCharacter->GetWorld(), EnemyCharacter->GetActorLocation(), EnemyCharacter->SearchRange, 16, FColor::Blue, false, 3.f);
