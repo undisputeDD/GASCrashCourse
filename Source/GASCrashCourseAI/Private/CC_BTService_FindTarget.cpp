@@ -32,7 +32,9 @@ void UCC_BTService_FindTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8
 	if (IsValid(TargetPlayerActor) && TargetPlayerActor->IsAlive())
 	{
 		Blackboard->SetValueAsObject(FName("TargetActor"), TargetPlayerActor);
-		Blackboard->SetValueAsBool(FName("bIsTargetInMeleeRange"), true);
+		float DistanceToPlayer = FVector::Distance(EnemyCharacter->GetActorLocation(), TargetPlayerActor->GetActorLocation());
+		bool bInRange = (DistanceToPlayer <= EnemyCharacter->AcceptanceRadius);
+		Blackboard->SetValueAsBool(FName("bIsTargetInMeleeRange"), bInRange);
 	}
 	else
 	{

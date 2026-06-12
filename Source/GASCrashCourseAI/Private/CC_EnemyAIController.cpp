@@ -5,6 +5,7 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Characters/CC_EnemyCharacter.h"
 
 ACC_EnemyAIController::ACC_EnemyAIController()
 {
@@ -18,6 +19,11 @@ void ACC_EnemyAIController::OnPossess(APawn* InPawn)
 
 	if (BehaviorTreeAsset != nullptr)
 	{
+		if (ACC_EnemyCharacter* Enemy = Cast<ACC_EnemyCharacter>(InPawn))
+		{
+			BlackboardComponent->SetValueAsFloat(FName("AcceptanceRadius"), Enemy->AcceptanceRadius);
+		}
+
 		BlackboardComponent->InitializeBlackboard(*BehaviorTreeAsset->BlackboardAsset);
 		BehaviorTreeComponent->StartTree(*BehaviorTreeAsset);
 	}
