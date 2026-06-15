@@ -10,6 +10,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "BrainComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 ACC_EnemyCharacter::ACC_EnemyCharacter()
 {
@@ -45,6 +46,18 @@ void ACC_EnemyCharacter::StopMovementUntilLanded()
 	AAIController* AIController = GetController<AAIController>();
 	if (!IsValid(AIController)) return;
 	AIController->StopMovement();
+
+	if (UBlackboardComponent* BB = AIController->GetBlackboardComponent())
+	{
+		BB->SetValueAsBool(FName("bIsAirborne"), true);
+	}
+
+	if (IsValid(AbilitySystemComponent))
+	{
+		FGameplayTagContainer TagsToCancel;
+		TagsToCancel.AddTag(CCTags::CCAbilities::Enemy::Attack);
+		AbilitySystemComponent->CancelAbilities(&TagsToCancel);
+	}
 
 	if (!LandedDelegate.IsAlreadyBound(this, &ThisClass::EnableMovementOnLanded))
 	{
@@ -98,6 +111,16 @@ void ACC_EnemyCharacter::HandleRespawn()
 void ACC_EnemyCharacter::EnableMovementOnLanded(const FHitResult& Hit)
 {
 	bIsBeingLaunched = false;
+
+	AAIController* AIController = GetController<AAIController>();
+	if (IsValid(AIController))
+	{
+		if (UBlackboardComponent* BB = AIController->GetBlackboardComponent())
+		{
+			BB->SetValueAsBool(FName("bIsAirborne"), false);
+		}
+	}
+
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, CCTags::Events::Enemy::EndAttack, FGameplayEventData());
 	LandedDelegate.RemoveAll(this);
 }

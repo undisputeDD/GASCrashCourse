@@ -20,10 +20,10 @@ void UCC_BTService_FindTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8
 	ACC_EnemyCharacter* EnemyCharacter = Cast<ACC_EnemyCharacter>(AIController->GetPawn());
 	if (!IsValid(EnemyCharacter) || !EnemyCharacter->IsAlive())
 	{
-		if (Blackboard)
+		if (IsValid(Blackboard))
 		{
 			Blackboard->ClearValue(FName("TargetActor"));
-			Blackboard->SetValueAsBool(FName("bIsTargetInMeleeRange"), false);
+			Blackboard->SetValueAsBool(FName("bIsTargetInRange"), false);
 		}
 		return;
 	}
@@ -42,14 +42,14 @@ void UCC_BTService_FindTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8
 		Blackboard->SetValueAsObject(FName("TargetActor"), TargetPlayerActor);
 		float DistanceToPlayer = FVector::Distance(EnemyCharacter->GetActorLocation(), TargetPlayerActor->GetActorLocation());
 		bool bInRange = (DistanceToPlayer <= EnemyCharacter->AcceptanceRadius);
-		Blackboard->SetValueAsBool(FName("bIsTargetInMeleeRange"), bInRange);
+		Blackboard->SetValueAsBool(FName("bIsTargetInRange"), bInRange);
 	}
 	else
 	{
 		if (IsValid(Blackboard))
 		{
 			Blackboard->ClearValue(FName("TargetActor"));
-			Blackboard->SetValueAsBool(FName("bIsTargetInMeleeRange"), false);
+			Blackboard->SetValueAsBool(FName("bIsTargetInRange"), false);
 		}
 	}
 
