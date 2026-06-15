@@ -9,6 +9,8 @@
 class UAttributeSet;
 class UAbilitySystemComponent;
 
+DECLARE_MULTICAST_DELEGATE(FOnDeathDelegate);
+
 /**
  * 
  */
@@ -40,6 +42,8 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Crash|AI")
 	float SearchRange{ 1000.f };
+
+	FOnDeathDelegate OnDeath;
 
 protected:
 	void BeginPlay();

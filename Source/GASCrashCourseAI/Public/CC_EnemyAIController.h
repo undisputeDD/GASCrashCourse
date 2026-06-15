@@ -33,5 +33,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crash|AI")
 	TObjectPtr<UBlackboardComponent> BlackboardComponent;
+
+private:
+	void OnPawnDeath();
 	
 };

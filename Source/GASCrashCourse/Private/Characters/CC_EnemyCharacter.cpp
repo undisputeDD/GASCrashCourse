@@ -9,7 +9,6 @@
 #include "Net/UnrealNetwork.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "BrainComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 ACC_EnemyCharacter::ACC_EnemyCharacter()
@@ -89,18 +88,7 @@ void ACC_EnemyCharacter::HandleDeath()
 {
 	Super::HandleDeath();
 
-	AAIController* AIController = GetController<AAIController>();
-	if (!IsValid(AIController)) return;
-
-	AbilitySystemComponent->CancelAbilities();
-
-	AIController->StopMovement();
-	AIController->BrainComponent->StopLogic(TEXT("Dead"));
-
-	GetCharacterMovement()->StopMovementImmediately();
-	GetCharacterMovement()->DisableMovement();
-
-	DetachFromControllerPendingDestroy();
+	OnDeath.Broadcast();
 }
 
 void ACC_EnemyCharacter::HandleRespawn()
