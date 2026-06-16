@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CC_BaseCharacter.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "CC_PlayerCharacter.generated.h"
 
 class USpringArmComponent;
@@ -30,6 +31,9 @@ public:
 
 	// Works on clients
 	virtual void OnRep_PlayerState() override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crash|AI")
+	UAIPerceptionStimuliSourceComponent* StimuliSource;
 	
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Camera")

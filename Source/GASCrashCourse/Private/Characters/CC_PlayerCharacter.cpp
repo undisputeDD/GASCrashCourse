@@ -9,6 +9,7 @@
 #include "Player/CC_PlayerState.h"
 #include "AbilitySystem/CC_AbilitySystemComponent.h"
 #include "AbilitySystem/CC_AttributeSet.h"
+#include "Perception/AISense_Sight.h"
 
 ACC_PlayerCharacter::ACC_PlayerCharacter()
 {
@@ -38,6 +39,10 @@ ACC_PlayerCharacter::ACC_PlayerCharacter()
 	FollowCamera->bUsePawnControlRotation = false;
 
 	Tags.Add(CrashTags::Player);
+
+	StimuliSource = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("StimuliSource"));
+	StimuliSource->RegisterForSense(TSubclassOf<UAISense_Sight>());
+	StimuliSource->RegisterWithPerceptionSystem();
 }
 
 UAbilitySystemComponent* ACC_PlayerCharacter::GetAbilitySystemComponent() const

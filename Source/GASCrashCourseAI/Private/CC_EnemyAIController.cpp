@@ -10,11 +10,50 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "CC_AI_PatrolWorldSubsystem.h"
 #include "CC_AI_PatrolPoint.h"
+#include "Characters/CC_PlayerCharacter.h"
+#include "Perception/AIPerceptionComponent.h"
+#include "Perception/AISenseConfig_Sight.h"
 
 ACC_EnemyAIController::ACC_EnemyAIController()
 {
 	BehaviorTreeComponent = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorTreeComponent"));
 	BlackboardComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackboardComponent"));
+
+	EnemyPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("PerceptionComponent"));
+	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SightConfig"));
+
+	ACC_EnemyCharacter* EnemyCharacter = Cast<ACC_EnemyCharacter>(GetPawn());
+	if (IsValid(EnemyCharacter))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AcceptanceRadius as SightRadius"));
+		SightConfig->SightRadius = EnemyCharacter->AcceptanceRadius;
+		SightConfig->LoseSightRadius = EnemyCharacter->AcceptanceRadius + 200.f;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Default values as SightRadius"));
+		SightConfig->SightRadius = 1000.f;
+		SightConfig->LoseSightRadius = 1200.f;
+	}
+	SightConfig->PeripheralVisionAngleDegrees = 60.f;
+	SightConfig->SetMaxAge(5.f);
+
+	SightConfig->DetectionByAffiliation.bDetectEnemies = true;
+	SightConfig->DetectionByAffiliation.bDetectFriendlies = true;
+	SightConfig->DetectionByAffiliation.bDetectNeutrals = true;
+
+	EnemyPerceptionComponent->ConfigureSense(*SightConfig);
+	EnemyPerceptionComponent->SetDominantSense(SightConfig->GetSenseImplementation());
+}
+
+void ACC_EnemyAIController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (EnemyPerceptionComponent)
+	{
+		EnemyPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ACC_EnemyAIController::OnTargetDetected);
+	}
 }
 
 void ACC_EnemyAIController::OnPossess(APawn* InPawn)
@@ -35,6 +74,28 @@ void ACC_EnemyAIController::OnPossess(APawn* InPawn)
 	if (ACC_EnemyCharacter* BaseChar = Cast<ACC_EnemyCharacter>(InPawn))
 	{
 		BaseChar->OnDeath.AddUObject(this, &ThisClass::OnPawnDeath);
+	}
+}
+
+void ACC_EnemyAIController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus)
+{
+	UBlackboardComponent* BB = GetBlackboardComponent();
+	if (!IsValid(BB)) return;
+
+	if (Actor->ActorHasTag(TEXT("Player")))
+	{
+		if (Stimulus.WasSuccessfullySensed())
+		{
+			BB->SetValueAsObject(FName("TargetActor"), Actor);
+
+			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("I SEE YOU!"));
+		}
+		else
+		{
+			BB->ClearValue(FName("TargetActor"));
+
+			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("I LOST YOU!"));
+		}
 	}
 }
 

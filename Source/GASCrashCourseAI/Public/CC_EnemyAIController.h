@@ -4,11 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "Perception/AIPerceptionTypes.h"
 #include "CC_EnemyAIController.generated.h"
 
 class UBehaviorTreeComponent;
 class UBlackboardComponent;
 class UBehaviorTree;
+class UAIPerceptionComponent;
+class UAISenseConfig_Sight;
 
 /**
  * 
@@ -23,6 +26,16 @@ public:
 
 protected:
 	virtual void OnPossess(APawn* InPawn) override;
+	virtual void BeginPlay() override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crash|AI")
+	UAIPerceptionComponent* EnemyPerceptionComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crash|AI")
+	UAISenseConfig_Sight* SightConfig;
+
+	UFUNCTION()
+	void OnTargetDetected(AActor* Actor, FAIStimulus Stimulus);
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Crash|AI")

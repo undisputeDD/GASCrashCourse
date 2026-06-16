@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTService.h"
-#include "CC_BTService_FindTarget.generated.h"
+#include "CC_BTService_CheckRange.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class GASCRASHCOURSEAI_API UCC_BTService_FindTarget : public UBTService
+class GASCRASHCOURSEAI_API UCC_BTService_CheckRange : public UBTService
 {
 	GENERATED_BODY()
 	
