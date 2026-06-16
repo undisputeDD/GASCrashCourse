@@ -15,7 +15,7 @@ void UCC_BTService_CheckRange::TickNode(UBehaviorTreeComponent& OwnerComp, uint8
 	if (!IsValid(AIController)) return;
 
 	UBlackboardComponent* BB = AIController->GetBlackboardComponent();
-	if (IsValid(BB)) return;
+	if (!IsValid(BB)) return;
 
 	ACC_PlayerCharacter* PlayerCharacter = Cast<ACC_PlayerCharacter>(BB->GetValueAsObject("TargetActor"));
 	ACC_EnemyCharacter* EnemyCharacter = Cast<ACC_EnemyCharacter>(AIController->GetPawn());

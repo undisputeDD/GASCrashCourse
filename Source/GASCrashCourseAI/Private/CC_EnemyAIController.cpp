@@ -22,19 +22,8 @@ ACC_EnemyAIController::ACC_EnemyAIController()
 	EnemyPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("PerceptionComponent"));
 	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SightConfig"));
 
-	ACC_EnemyCharacter* EnemyCharacter = Cast<ACC_EnemyCharacter>(GetPawn());
-	if (IsValid(EnemyCharacter))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("AcceptanceRadius as SightRadius"));
-		SightConfig->SightRadius = EnemyCharacter->AcceptanceRadius;
-		SightConfig->LoseSightRadius = EnemyCharacter->AcceptanceRadius + 200.f;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Default values as SightRadius"));
-		SightConfig->SightRadius = 1000.f;
-		SightConfig->LoseSightRadius = 1200.f;
-	}
+	SightConfig->SightRadius = 1000.f;
+	SightConfig->LoseSightRadius = 1200.f;
 	SightConfig->PeripheralVisionAngleDegrees = 60.f;
 	SightConfig->SetMaxAge(5.f);
 
@@ -73,7 +62,12 @@ void ACC_EnemyAIController::OnPossess(APawn* InPawn)
 
 	if (ACC_EnemyCharacter* BaseChar = Cast<ACC_EnemyCharacter>(InPawn))
 	{
+		SightConfig->SightRadius = BaseChar->AcceptanceRadius;
+		SightConfig->LoseSightRadius = BaseChar->AcceptanceRadius + 200.f;
+
 		BaseChar->OnDeath.AddUObject(this, &ThisClass::OnPawnDeath);
+
+		EnemyPerceptionComponent->ConfigureSense(*SightConfig);
 	}
 }
 
