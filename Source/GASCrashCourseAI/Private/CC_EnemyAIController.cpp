@@ -51,19 +51,20 @@ void ACC_EnemyAIController::OnPossess(APawn* InPawn)
 
 	if (BehaviorTreeAsset != nullptr)
 	{
+		BlackboardComponent->InitializeBlackboard(*BehaviorTreeAsset->BlackboardAsset);
+
 		if (ACC_EnemyCharacter* Enemy = Cast<ACC_EnemyCharacter>(InPawn))
 		{
 			BlackboardComponent->SetValueAsFloat(FName("AcceptanceRadius"), Enemy->AcceptanceRadius);
 		}
 
-		BlackboardComponent->InitializeBlackboard(*BehaviorTreeAsset->BlackboardAsset);
 		BehaviorTreeComponent->StartTree(*BehaviorTreeAsset);
 	}
 
 	if (ACC_EnemyCharacter* BaseChar = Cast<ACC_EnemyCharacter>(InPawn))
 	{
-		SightConfig->SightRadius = BaseChar->AcceptanceRadius;
-		SightConfig->LoseSightRadius = BaseChar->AcceptanceRadius + 200.f;
+		SightConfig->SightRadius = BaseChar->SearchRange;
+		SightConfig->LoseSightRadius = BaseChar->SearchRange + 200.f;
 
 		BaseChar->OnDeath.AddUObject(this, &ThisClass::OnPawnDeath);
 
