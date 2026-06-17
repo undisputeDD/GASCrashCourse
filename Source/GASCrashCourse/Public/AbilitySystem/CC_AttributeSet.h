@@ -58,8 +58,8 @@ public:
 	UFUNCTION()
 	void OnRep_MaxMana(const FGameplayAttributeData& OldValue);
 
-	ATTRIBUTE_ACCESSORS(ThisClass, Health);
-	ATTRIBUTE_ACCESSORS(ThisClass, MaxHealth);
-	ATTRIBUTE_ACCESSORS(ThisClass, Mana);
-	ATTRIBUTE_ACCESSORS(ThisClass, MaxMana);
+	ATTRIBUTE_ACCESSORS(UCC_AttributeSet, Health);
+	ATTRIBUTE_ACCESSORS(UCC_AttributeSet, MaxHealth);
+	ATTRIBUTE_ACCESSORS(UCC_AttributeSet, Mana);
+	ATTRIBUTE_ACCESSORS(UCC_AttributeSet, MaxMana);
 };

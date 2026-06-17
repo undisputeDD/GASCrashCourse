@@ -55,7 +55,7 @@ void ACC_EnemyAIController::OnPossess(APawn* InPawn)
 
 		if (ACC_EnemyCharacter* Enemy = Cast<ACC_EnemyCharacter>(InPawn))
 		{
-			BlackboardComponent->SetValueAsFloat(FName("AcceptanceRadius"), Enemy->AcceptanceRadius);
+			BlackboardComponent->SetValueAsFloat(FName("AcceptanceRadius"), Enemy->AcceptanceRadius + 50);
 		}
 
 		BehaviorTreeComponent->StartTree(*BehaviorTreeAsset);
@@ -82,12 +82,14 @@ void ACC_EnemyAIController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus
 		if (Stimulus.WasSuccessfullySensed())
 		{
 			BB->SetValueAsObject(FName("TargetActor"), Actor);
+			BB->ClearValue(FName("LastKnownLocation"));
 
 			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("I SEE YOU!"));
 		}
 		else
 		{
 			BB->ClearValue(FName("TargetActor"));
+			BB->SetValueAsVector(FName("LastKnownLocation"), Actor->GetActorLocation());
 
 			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("I LOST YOU!"));
 		}

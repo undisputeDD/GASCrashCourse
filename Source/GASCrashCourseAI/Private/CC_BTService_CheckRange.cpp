@@ -21,8 +21,8 @@ void UCC_BTService_CheckRange::TickNode(UBehaviorTreeComponent& OwnerComp, uint8
 	ACC_EnemyCharacter* EnemyCharacter = Cast<ACC_EnemyCharacter>(AIController->GetPawn());
 	if (IsValid(PlayerCharacter) && PlayerCharacter->IsAlive() && IsValid(EnemyCharacter) && EnemyCharacter->IsAlive())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("AcceptanceRadius entered if!"));
 		float Distance = FVector::Distance(EnemyCharacter->GetActorLocation(), PlayerCharacter->GetActorLocation());
+		UE_LOG(LogTemp, Warning, TEXT("AcceptanceRadius entered if! %f %f %f"), EnemyCharacter->AcceptanceRadius, BB->GetValueAsFloat("AcceptanceRadius"), Distance);
 		BB->SetValueAsBool("bIsTargetInRange", Distance <= EnemyCharacter->AcceptanceRadius);
 	}
 	else
