@@ -55,7 +55,7 @@ void ACC_EnemyAIController::OnPossess(APawn* InPawn)
 
 		if (ACC_EnemyCharacter* Enemy = Cast<ACC_EnemyCharacter>(InPawn))
 		{
-			BlackboardComponent->SetValueAsFloat(FName("AcceptanceRadius"), Enemy->AcceptanceRadius + 50);
+			BlackboardComponent->SetValueAsFloat(FName("AcceptanceRadius"), Enemy->AcceptanceRadius - 100.f);
 		}
 
 		BehaviorTreeComponent->StartTree(*BehaviorTreeAsset);
@@ -70,6 +70,27 @@ void ACC_EnemyAIController::OnPossess(APawn* InPawn)
 
 		EnemyPerceptionComponent->ConfigureSense(*SightConfig);
 	}
+}
+
+void ACC_EnemyAIController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+#if WITH_EDITOR
+	if (ACC_EnemyCharacter* Enemy = Cast<ACC_EnemyCharacter>(GetPawn()))
+	{
+		FVector EyeLoc;
+		FRotator EyeRot;
+		Enemy->GetActorEyesViewPoint(EyeLoc, EyeRot);
+		FVector LookDir = EyeRot.Vector();
+
+		float HalfAngleRads = FMath::DegreesToRadians(SightConfig->PeripheralVisionAngleDegrees);
+
+		DrawDebugCone(GetWorld(), EyeLoc, LookDir, SightConfig->SightRadius, HalfAngleRads, HalfAngleRads, 12, FColor::Green, false, -1.f, 0, 1.5f);
+
+		DrawDebugSphere(GetWorld(), EyeLoc, SightConfig->LoseSightRadius, 16, FColor::Magenta, false, -1.f, 0, 1.f);
+	}
+#endif
 }
 
 void ACC_EnemyAIController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus)
