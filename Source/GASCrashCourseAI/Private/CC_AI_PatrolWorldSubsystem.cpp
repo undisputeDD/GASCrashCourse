@@ -27,7 +27,6 @@ ACC_AI_PatrolPoint* UCC_AI_PatrolWorldSubsystem::GetAndClaimRandomFreePoint()
 {
 	TArray<ACC_AI_PatrolPoint*> FreePoints;
 
-	// Ищем свободные точки в кэше
 	for (ACC_AI_PatrolPoint* Point : CachedPatrolPoints)
 	{
 		if (IsValid(Point) && !Point->bIsOccupied)
