@@ -13,6 +13,7 @@
 #include "Characters/CC_PlayerCharacter.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
+#include "Perception/AISenseConfig_Hearing.h"
 
 ACC_EnemyAIController::ACC_EnemyAIController()
 {
@@ -20,6 +21,7 @@ ACC_EnemyAIController::ACC_EnemyAIController()
 	BlackboardComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackboardComponent"));
 
 	EnemyPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("PerceptionComponent"));
+
 	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SightConfig"));
 
 	SightConfig->SightRadius = 1000.f;
@@ -28,10 +30,22 @@ ACC_EnemyAIController::ACC_EnemyAIController()
 	SightConfig->SetMaxAge(5.f);
 
 	SightConfig->DetectionByAffiliation.bDetectEnemies = true;
-	SightConfig->DetectionByAffiliation.bDetectFriendlies = true;
-	SightConfig->DetectionByAffiliation.bDetectNeutrals = true;
+	// SightConfig->DetectionByAffiliation.bDetectFriendlies = true;
+	// SightConfig->DetectionByAffiliation.bDetectNeutrals = true;
 
 	EnemyPerceptionComponent->ConfigureSense(*SightConfig);
+
+	HearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("HearingConfig"));
+
+	HearingConfig->HearingRange = 3000.f;
+	HearingConfig->SetMaxAge(5.f);
+
+	HearingConfig->DetectionByAffiliation.bDetectEnemies = true;
+	// HearingConfig->DetectionByAffiliation.bDetectFriendlies = true;
+	// HearingConfig->DetectionByAffiliation.bDetectNeutrals = true;
+
+	EnemyPerceptionComponent->ConfigureSense(*HearingConfig);
+
 	EnemyPerceptionComponent->SetDominantSense(SightConfig->GetSenseImplementation());
 }
 
@@ -98,6 +112,7 @@ void ACC_EnemyAIController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus
 	UBlackboardComponent* BB = GetBlackboardComponent();
 	if (!IsValid(BB)) return;
 
+	UE_LOG(LogTemp, Display, TEXT("OnTargetDetected"));
 	if (Actor->ActorHasTag(TEXT("Player")))
 	{
 		if (Stimulus.WasSuccessfullySensed())
