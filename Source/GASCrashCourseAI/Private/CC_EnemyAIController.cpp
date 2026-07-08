@@ -37,7 +37,7 @@ ACC_EnemyAIController::ACC_EnemyAIController()
 
 	HearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("HearingConfig"));
 
-	HearingConfig->HearingRange = 3000.f;
+	HearingConfig->HearingRange = 700.f;
 	HearingConfig->SetMaxAge(5.f);
 
 	HearingConfig->DetectionByAffiliation.bDetectEnemies = true;
@@ -113,22 +113,32 @@ void ACC_EnemyAIController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus
 	if (!IsValid(BB)) return;
 
 	UE_LOG(LogTemp, Display, TEXT("OnTargetDetected"));
-	if (Actor->ActorHasTag(TEXT("Player")))
+	if (Stimulus.Type == UAISense::GetSenseID<UAISense_Sight>())
 	{
-		if (Stimulus.WasSuccessfullySensed())
-		{
-			BB->SetValueAsObject(FName("TargetActor"), Actor);
-			BB->ClearValue(FName("LastKnownLocation"));
 
-			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("I SEE YOU!"));
-		}
-		else
-		{
-			BB->ClearValue(FName("TargetActor"));
-			BB->SetValueAsVector(FName("LastKnownLocation"), Actor->GetActorLocation());
+		UE_LOG(LogTemp, Display, TEXT("OnTargetDetected Sight"));
 
-			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("I LOST YOU!"));
+		if (Actor->ActorHasTag(TEXT("Player")))
+		{
+			if (Stimulus.WasSuccessfullySensed())
+			{
+				BB->SetValueAsObject(FName("TargetActor"), Actor);
+				BB->ClearValue(FName("LastKnownLocation"));
+
+				GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("I SEE YOU!"));
+			}
+			else
+			{
+				BB->ClearValue(FName("TargetActor"));
+				BB->SetValueAsVector(FName("LastKnownLocation"), Actor->GetActorLocation());
+
+				GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("I LOST YOU!"));
+			}
 		}
+	}
+	else if (Stimulus.Type == UAISense::GetSenseID<UAISense_Hearing>())
+	{
+		UE_LOG(LogTemp, Display, TEXT("OnTargetDetected Hearing"));
 	}
 }
 
