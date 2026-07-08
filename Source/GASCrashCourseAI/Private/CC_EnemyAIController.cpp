@@ -38,7 +38,7 @@ ACC_EnemyAIController::ACC_EnemyAIController()
 	HearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("HearingConfig"));
 
 	HearingConfig->HearingRange = 700.f;
-	HearingConfig->SetMaxAge(5.f);
+	HearingConfig->SetMaxAge(3.f);
 
 	HearingConfig->DetectionByAffiliation.bDetectEnemies = true;
 	HearingConfig->DetectionByAffiliation.bDetectFriendlies = true;
