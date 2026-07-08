@@ -38,7 +38,7 @@ ACC_EnemyAIController::ACC_EnemyAIController()
 	HearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("HearingConfig"));
 
 	HearingConfig->HearingRange = 700.f;
-	HearingConfig->SetMaxAge(3.f);
+	HearingConfig->SetMaxAge(0.f);
 
 	HearingConfig->DetectionByAffiliation.bDetectEnemies = true;
 	HearingConfig->DetectionByAffiliation.bDetectFriendlies = true;
@@ -142,6 +142,8 @@ void ACC_EnemyAIController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus
 
 		if (Stimulus.WasSuccessfullySensed())
 		{
+			UE_LOG(LogTemp, Display, TEXT("Stimulus WasSuccessfullySensed"));
+
 			UObject* CurrentTarget = BB->GetValueAsObject(FName("TargetActor"));
 			if (!CurrentTarget)
 			{
