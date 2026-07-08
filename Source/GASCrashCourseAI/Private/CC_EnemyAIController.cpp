@@ -30,8 +30,8 @@ ACC_EnemyAIController::ACC_EnemyAIController()
 	SightConfig->SetMaxAge(5.f);
 
 	SightConfig->DetectionByAffiliation.bDetectEnemies = true;
-	// SightConfig->DetectionByAffiliation.bDetectFriendlies = true;
-	// SightConfig->DetectionByAffiliation.bDetectNeutrals = true;
+	SightConfig->DetectionByAffiliation.bDetectFriendlies = true;
+	SightConfig->DetectionByAffiliation.bDetectNeutrals = true;
 
 	EnemyPerceptionComponent->ConfigureSense(*SightConfig);
 
@@ -41,8 +41,8 @@ ACC_EnemyAIController::ACC_EnemyAIController()
 	HearingConfig->SetMaxAge(5.f);
 
 	HearingConfig->DetectionByAffiliation.bDetectEnemies = true;
-	// HearingConfig->DetectionByAffiliation.bDetectFriendlies = true;
-	// HearingConfig->DetectionByAffiliation.bDetectNeutrals = true;
+	HearingConfig->DetectionByAffiliation.bDetectFriendlies = true;
+	HearingConfig->DetectionByAffiliation.bDetectNeutrals = true;
 
 	EnemyPerceptionComponent->ConfigureSense(*HearingConfig);
 
@@ -139,6 +139,17 @@ void ACC_EnemyAIController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus
 	else if (Stimulus.Type == UAISense::GetSenseID<UAISense_Hearing>())
 	{
 		UE_LOG(LogTemp, Display, TEXT("OnTargetDetected Hearing"));
+
+		if (Stimulus.WasSuccessfullySensed())
+		{
+			UObject* CurrentTarget = BB->GetValueAsObject(FName("TargetActor"));
+			if (!CurrentTarget)
+			{
+				BB->SetValueAsVector(FName("LastKnownLocation"), Stimulus.StimulusLocation);
+
+				GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("I HEAR YOU!"));
+			}
+		}
 	}
 }
 

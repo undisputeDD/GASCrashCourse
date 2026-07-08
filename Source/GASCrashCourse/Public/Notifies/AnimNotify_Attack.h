@@ -13,7 +13,7 @@ UCLASS()
 class GASCRASHCOURSE_API UAnimNotify_Attack : public UAnimNotify
 {
 	GENERATED_BODY()
-	
+
 protected:
 	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
 };
