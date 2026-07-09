@@ -41,7 +41,7 @@ public:
 	bool bIsBeingLaunched{ false };
 
 	UPROPERTY(EditAnywhere, Category = "Crash|AI")
-	float SearchRange{ 1000.f };
+	float SearchRange{ 700.f };
 
 	FOnDeathDelegate OnDeath;
 

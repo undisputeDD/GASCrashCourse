@@ -24,8 +24,8 @@ ACC_EnemyAIController::ACC_EnemyAIController()
 
 	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SightConfig"));
 
-	SightConfig->SightRadius = 1000.f;
-	SightConfig->LoseSightRadius = 1200.f;
+	SightConfig->SightRadius = 700.f;
+	SightConfig->LoseSightRadius = 900.f;
 	SightConfig->PeripheralVisionAngleDegrees = 60.f;
 	SightConfig->SetMaxAge(5.f);
 
@@ -37,7 +37,7 @@ ACC_EnemyAIController::ACC_EnemyAIController()
 
 	HearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("HearingConfig"));
 
-	HearingConfig->HearingRange = 700.f;
+	HearingConfig->HearingRange = 1200.f;
 	HearingConfig->SetMaxAge(0.f);
 
 	HearingConfig->DetectionByAffiliation.bDetectEnemies = true;
@@ -103,6 +103,8 @@ void ACC_EnemyAIController::Tick(float DeltaTime)
 		DrawDebugCone(GetWorld(), EyeLoc, LookDir, SightConfig->SightRadius, HalfAngleRads, HalfAngleRads, 12, FColor::Green, false, -1.f, 0, 1.5f);
 
 		DrawDebugSphere(GetWorld(), EyeLoc, SightConfig->LoseSightRadius, 16, FColor::Magenta, false, -1.f, 0, 1.f);
+
+		DrawDebugSphere(GetWorld(), EyeLoc, HearingConfig->HearingRange, 16, FColor::Blue, false, -1.f, 0, 1.f);
 	}
 #endif
 }
