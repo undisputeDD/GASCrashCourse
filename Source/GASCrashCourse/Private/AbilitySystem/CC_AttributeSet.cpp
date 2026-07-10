@@ -16,7 +16,7 @@ void UCC_AttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME_CONDITION_NOTIFY(UCC_AttributeSet, Mana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UCC_AttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
 
-	DOREPLIFETIME(UCC_AttributeSet, bAttributesInitialized);
+	DOREPLIFETIME_CONDITION_NOTIFY(UCC_AttributeSet, bAttributesInitialized, COND_None, REPNOTIFY_Always);
 }
 
 void UCC_AttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
