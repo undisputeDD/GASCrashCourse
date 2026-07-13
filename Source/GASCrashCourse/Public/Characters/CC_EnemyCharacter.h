@@ -10,6 +10,7 @@ class UAttributeSet;
 class UAbilitySystemComponent;
 
 DECLARE_MULTICAST_DELEGATE(FOnDeathDelegate);
+DECLARE_MULTICAST_DELEGATE(FOnHealNeededDelegate);
 
 /**
  * 
@@ -44,6 +45,7 @@ public:
 	float SearchRange{ 700.f };
 
 	FOnDeathDelegate OnDeath;
+	FOnHealNeededDelegate OnHealNeeded;
 
 protected:
 	void BeginPlay();
@@ -51,6 +53,8 @@ protected:
 	virtual void HandleDeath() override;
 
 	virtual void HandleRespawn() override;
+
+	virtual void OnHealthChange(const FOnAttributeChangeData& AttributeChangeData) override;
 
 private:
 	UFUNCTION()

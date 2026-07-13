@@ -56,7 +56,7 @@ protected:
 
 	void InitializeAttributes() const;
 
-	void OnHealthChange(const FOnAttributeChangeData& AttributeChangeData);
+	virtual void OnHealthChange(const FOnAttributeChangeData& AttributeChangeData);
 
 	virtual void HandleDeath();
 

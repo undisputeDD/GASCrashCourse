@@ -17,9 +17,6 @@
 
 ACC_EnemyAIController::ACC_EnemyAIController()
 {
-	BehaviorTreeComponent = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorTreeComponent"));
-	BlackboardComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackboardComponent"));
-
 	EnemyPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("PerceptionComponent"));
 
 	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SightConfig"));
@@ -65,14 +62,15 @@ void ACC_EnemyAIController::OnPossess(APawn* InPawn)
 
 	if (BehaviorTreeAsset != nullptr)
 	{
-		BlackboardComponent->InitializeBlackboard(*BehaviorTreeAsset->BlackboardAsset);
+		RunBehaviorTree(BehaviorTreeAsset);
 
-		if (ACC_EnemyCharacter* Enemy = Cast<ACC_EnemyCharacter>(InPawn))
+		if (UBlackboardComponent* BB = GetBlackboardComponent())
 		{
-			BlackboardComponent->SetValueAsFloat(FName("AcceptanceRadius"), Enemy->AcceptanceRadius - 100.f);
+			if (ACC_EnemyCharacter* Enemy = Cast<ACC_EnemyCharacter>(InPawn))
+			{
+				BB->SetValueAsFloat(FName("AcceptanceRadius"), Enemy->AcceptanceRadius - 100.f);
+			}
 		}
-
-		BehaviorTreeComponent->StartTree(*BehaviorTreeAsset);
 	}
 
 	if (ACC_EnemyCharacter* BaseChar = Cast<ACC_EnemyCharacter>(InPawn))
@@ -81,6 +79,7 @@ void ACC_EnemyAIController::OnPossess(APawn* InPawn)
 		SightConfig->LoseSightRadius = BaseChar->SearchRange + 200.f;
 
 		BaseChar->OnDeath.AddUObject(this, &ThisClass::OnPawnDeath);
+		BaseChar->OnHealNeeded.AddUObject(this, &ThisClass::OnHealNeeded);
 
 		EnemyPerceptionComponent->ConfigureSense(*SightConfig);
 	}
@@ -198,4 +197,14 @@ void ACC_EnemyAIController::OnPawnDeath()
 	}
 
 	ControlledPawn->DetachFromControllerPendingDestroy();
+}
+
+void ACC_EnemyAIController::OnHealNeeded()
+{
+	UE_LOG(LogTemp, Error, TEXT("OnHealNeeded called!"));
+
+	if (UBlackboardComponent* BB = GetBlackboardComponent())
+	{
+		BB->SetValueAsBool("HealNeeded", true);
+	}
 }

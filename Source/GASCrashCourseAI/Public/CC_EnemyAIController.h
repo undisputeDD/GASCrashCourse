@@ -46,13 +46,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Crash|AI")
 	TObjectPtr<UBehaviorTree> BehaviorTreeAsset;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crash|AI")
-	TObjectPtr<UBehaviorTreeComponent> BehaviorTreeComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crash|AI")
-	TObjectPtr<UBlackboardComponent> BlackboardComponent;
-
 private:
 	void OnPawnDeath();
+	void OnHealNeeded();
 	
 };

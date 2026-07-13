@@ -112,3 +112,13 @@ void ACC_EnemyCharacter::EnableMovementOnLanded(const FHitResult& Hit)
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, CCTags::Events::Enemy::EndAttack, FGameplayEventData());
 	LandedDelegate.RemoveAll(this);
 }
+
+void ACC_EnemyCharacter::OnHealthChange(const FOnAttributeChangeData& AttributeChangeData)
+{
+	if (AttributeChangeData.NewValue <= 25.f && AttributeChangeData.NewValue > 0.f)
+	{
+		OnHealNeeded.Broadcast();
+	}
+
+	Super::OnHealthChange(AttributeChangeData);
+}
