@@ -130,7 +130,12 @@ void ACC_EnemyAIController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus
 			}
 			else
 			{
-				BB->ClearValue(FName("TargetActor"));
+				UE_LOG(LogTemp, Display, TEXT("Target Lost!"));
+
+				if (!BB->IsVectorValueSet("KiteLocation"))
+				{
+					BB->ClearValue(FName("TargetActor"));
+				}
 				BB->SetValueAsVector(FName("LastKnownLocation"), Actor->GetActorLocation());
 
 				GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("I LOST YOU!"));
