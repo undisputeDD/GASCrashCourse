@@ -24,9 +24,11 @@ void UCC_BTService_CheckRange::TickNode(UBehaviorTreeComponent& OwnerComp, uint8
 		float Distance = FVector::Distance(EnemyCharacter->GetActorLocation(), PlayerCharacter->GetActorLocation());
 		UE_LOG(LogTemp, Warning, TEXT("AcceptanceRadius entered if! %f %f %f"), EnemyCharacter->AcceptanceRadius, BB->GetValueAsFloat("AcceptanceRadius"), Distance);
 		BB->SetValueAsBool("bIsTargetInRange", Distance <= EnemyCharacter->AcceptanceRadius);
+		BB->SetValueAsBool("bIsTargetTooClose", EnemyCharacter->bIsMelee ? false : Distance < EnemyCharacter->AcceptanceRadius - 400);
 	}
 	else
 	{
 		BB->SetValueAsBool("bIsTargetInRange", false);
+		BB->SetValueAsBool("bIsTargetTooClose", false);
 	}
 }

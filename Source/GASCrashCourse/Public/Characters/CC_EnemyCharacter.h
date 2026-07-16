@@ -33,6 +33,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Crash|AI")
 	float MaxAttackDelay{ .5f };
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Crash|AI")
+	bool bIsMelee{false};
+
 	UFUNCTION(BlueprintImplementableEvent)
 	float GetTimelineLength();
 
